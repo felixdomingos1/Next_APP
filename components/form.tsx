@@ -4,8 +4,10 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Grid , Button, Typography, TextField,  Container } from '@mui/material';
 
+import './form.css'
+
 export default function RegisterForm() {
-  const [formData, setFormData] = useState({
+  const [data, setData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
@@ -19,8 +21,8 @@ export default function RegisterForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setData({
+      ...data,
       [name]: value,
     });
   };
@@ -29,7 +31,7 @@ export default function RegisterForm() {
     const updatedErrors = { ...errors };
     // Email validation using a simple Regex
     const emailvalidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailvalidation.test(formData.email)) {
+    if (!emailvalidation.test(data.email)) {
       updatedErrors.email = 'Please enter a valid email address';
       isValid = false;
     } else {
@@ -37,7 +39,7 @@ export default function RegisterForm() {
     }
 
     // validation the password length
-    if (formData.password.length < 8) {
+    if (data.password.length < 8) {
       updatedErrors.password = 'Password must be at least 8 characters';
       isValid = false;
     } else {
@@ -45,7 +47,7 @@ export default function RegisterForm() {
     }
 
     // Password and Confirm Password match validation
-    if (formData.password !== formData.confirmPassword) {
+    if (data.password !== data.confirmPassword) {
       updatedErrors.confirmPassword = 'Passwords do not match';
       isValid = false;
     } else {
@@ -61,10 +63,10 @@ export default function RegisterForm() {
     if (validateForm()) {
       const apiUrl = 'http://localhost:5000/api/register';
 
-      axios.post(apiUrl, formData)
+      axios.post(apiUrl, data)
         .then((response) => {
           alert("User created");
-          setFormData({
+          setData({
             email: '',
             password: '',
             confirmPassword: '',
@@ -76,47 +78,53 @@ export default function RegisterForm() {
     }
   };
   return (
-    <Container>
+    <div className='container'>
+    <Container >
       <Typography variant="h4">Registration Form</Typography>
       <br></br>
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={1}>
-          <Grid item xs={7}>
+        <Grid  spacing={1} container>
+          <Grid item xs={12}>
             <TextField
-              type="email" id="email" name="email"label="Email"fullWidth variant="outlined"
-              value={formData.email}
+              type="email" 
+              id="email" 
+              name="email"
+              label="Email" 
+              value={data.email}
               onChange={handleChange}
               error={Boolean(errors.email)}
               helperText={errors.email}
+              variant="standard"
+              fullWidth
               required
             />
           </Grid>
 
-          <Grid item xs={7}>
+          <Grid item xs={8}>
             <TextField
               type="password"
               id="password"
               name="password"
               label="Password"
-              fullWidth
-              variant="outlined"
-              value={formData.password}
+              variant="standard"
+              value={data.password}
               onChange={handleChange}
               required
+              fullWidth
               error={Boolean(errors.password)}
               helperText={errors.password}
             />
           </Grid>
 
-          <Grid item xs={7}>
+          <Grid item  xs={5}>
             <TextField
               type="password"
               id="confirmPassword"
               name="confirmPassword"
               label="Confirm Password"
               fullWidth
-              variant="outlined"
-              value={formData.confirmPassword}
+              variant="standard"
+              value={data.confirmPassword}
               onChange={handleChange}
               required
               error={Boolean(errors.confirmPassword)}
@@ -132,5 +140,6 @@ export default function RegisterForm() {
         </Grid>
       </form>
     </Container>
+    </div>
   );
 }

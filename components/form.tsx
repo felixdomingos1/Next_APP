@@ -1,11 +1,8 @@
 'use client'
-
 import { useState } from 'react';
 import axios from 'axios';
 import { Grid , Button, Typography, TextField,  Container } from '@mui/material';
-
 import './form.css'
-
 export default function RegisterForm() {
   const [data, setData] = useState({
     email: '',
@@ -13,11 +10,7 @@ export default function RegisterForm() {
     confirmPassword: '',
   });
 
-  const [errors, setErrs] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [errors, setErrs] = useState(data);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,15 +55,10 @@ export default function RegisterForm() {
     e.preventDefault();
     if (validateForm()) {
       const apiUrl = 'http://localhost:5000/api/register';
-
       axios.post(apiUrl, data)
-        .then((response) => {
+        .then((resp) => {
           alert("User created");
-          setData({
-            email: '',
-            password: '',
-            confirmPassword: '',
-          });
+          setData(data);
         })
         .catch((error) => {
           alert('Error sending data: '+ error.response.data.errors[0].error);
@@ -131,10 +119,9 @@ export default function RegisterForm() {
               helperText={errors.confirmPassword}
             />
           </Grid>
-
-          <Grid item xs={12}>
+          <Grid item xs={18}>
             <Button type="submit" variant="contained" color="secondary">
-              Create
+              send
             </Button>
           </Grid>
         </Grid>
